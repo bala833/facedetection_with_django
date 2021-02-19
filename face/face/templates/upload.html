@@ -1,0 +1,68 @@
+{% load crispy_forms_tags %}
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Upload Videos</title>
+</head>
+<body>
+
+<h1>Video Uploader</h1>
+
+				<form method="post" action="" enctype="multipart/form-data" >
+				           {% csrf_token %}
+				          <div class="container mb-5">
+				            {% crispy form %}
+				      <br>
+				<input type="submit" value="Save">
+				</div>
+				</form>
+
+<div>
+	<a href="{% url 'TakeImages' %}">
+	<button style="background-color: gray; border: 1px solid gray;" name="Take you image " value="Take you image "></button>
+</a>
+</div>
+
+<div>
+	<a href="{% url 'TrainImages' %}">
+	<button style="background-color: gray; border: 1px solid gray;" name="Train your face" value="Train your face"></button>
+</a>
+</div>
+
+<div>
+	<a href="{% url 'track_image' %}">
+	<button style="background-color: gray;" value="Track you Image"></button>
+</a>
+</div>
+
+
+
+<div>
+	<a href="{% url 'download' %}">
+	<button style="background-color: gray;" value="Track you Image"></button>
+</a>
+</div>
+
+
+</body>
+</html>
+
+{% comment %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<form action="" method="POST">{% csrf_token %}
+ 
+    <input type="text" name="title" placeholder="Enter Video Title here"><br>
+    <input type="file" name="video" accept="video/*">
+    <button type="submit"> Upload New Video </button>
+ 
+</form>
+
+</body>
+</html>
+{% endcomment %}
