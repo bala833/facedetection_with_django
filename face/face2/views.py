@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
- 
+from django.http import HttpResponse
 from .models import Videos
 from face2.forms import VideoForm
 
@@ -93,6 +93,68 @@ message2 = tk.Label(window, text="" ,fg="red"   ,bg="yellow",activeforeground = 
 message2.place(x=650, y=650)
 
 
+
+def track_image1(request):
+    recognizer = cv2.face.LBPHFaceRecognizer_create()#cv2.createLBPHFaceRecognizer()
+    recognizer.read("/home/xarxa-15/19_01_2021_projects/Face-recognition-and-attendance-system-master/trainningData.yml")
+    harcascadePath = "/home/xarxa-15/19_01_2021_projects/Face-recognition-and-attendance-system-master/haarcascade_frontalface_default.xml"
+    # harcascadePath = "haarcascade_frontalface_default.xml"
+    faceCascade = cv2.CascadeClassifier(harcascadePath)  
+    # df=pd.read_csv("StudentDetails\\StudentDetails.csv")
+    df=pd.read_csv("/home/xarxa-15/19_01_2021_projects/Face-recognition-and-attendance-system-master/StudentDetails/StudentDetails.csv")
+    cam = cv2.VideoCapture(0)
+    font = cv2.FONT_HERSHEY_SIMPLEX        
+    col_names =  ['Id','Name','Date','Time']
+    attendance = pd.DataFrame(columns = col_names)    
+    while True:
+        _ret, im =cam.read()
+        gray=cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
+        faces=faceCascade.detectMultiScale(gray, 1.2,5)    
+        for(x,y,w,h) in faces:
+            cv2.rectangle(im,(x,y),(x+w,y+h),(225,0,0),2)
+            Id, conf = recognizer.predict(gray[y:y+h,x:x+w])  
+            print(Id, conf,"0000000000000000000000")                                 
+            if(conf < 50):
+                ts = time.time()      
+                date = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d')
+                timeStamp = datetime.datetime.fromtimestamp(ts).strftime('%H:%M:%S')
+                aa=df.loc[df['Id'] == Id]['Name'].values
+                print(aa,"rrrrrrrrrrrrrrrrrrrrrrr")
+                tt=str(Id)+"-"+aa
+                attendance.loc[len(attendance)] = [Id,aa,date,timeStamp]
+                
+            else:
+                Id='Unknown'                
+                tt=str(Id)  
+            if(conf > 75):
+                noOfFile=len(os.listdir("/home/xarxa-15/19_01_2021_projects/Face-recognition-and-attendance-system-master/ImagesUnknown"))+1
+                cv2.imwrite("/home/xarxa-15/19_01_2021_projects/Face-recognition-and-attendance-system-master/ImagesUnknown/Image"+str(noOfFile) + ".jpg", im[y:y+h,x:x+w])            
+            cv2.putText(im,str(tt),(x,y+h), font, 1,(255,255,255),2)        
+        attendance=attendance.drop_duplicates(subset=['Id'],keep='first')    
+        cv2.imshow('im',im) 
+        if (cv2.waitKey(1)==ord('q')):
+            break
+    ts = time.time()      
+    date = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d')
+    timeStamp = datetime.datetime.fromtimestamp(ts).strftime('%H:%M:%S')
+    Hour,Minute,Second=timeStamp.split(":")
+    fileName="/home/xarxa-15/19_01_2021_projects/Face-recognition-and-attendance-system-master/Attendance/Attendance_"+date+"_"+Hour+"-"+Minute+"-"+Second+".csv"
+    attendance.to_csv(fileName,index=False)
+    cam.release()
+    cv2.destroyAllWindows()
+    #print(attendance)
+    res=attendance
+    message2.configure(text= res)
+
+
+
+
+
+
+
+
+
+
 def track_image(request):
     # recognizer = cv2.face.LBPHFaceRecognizer_create()#cv2.createLBPHFaceRecognizer()
     recognizer = cv2.face_LBPHFaceRecognizer.create()
@@ -116,12 +178,13 @@ def track_image(request):
             Id, conf = recognizer.predict(gray[y:y+h,x:x+w])    
             print(Id, conf, ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;")                               
             if(conf < 50):
-                ts = time.time()      
+                ts = time.time()        
                 date = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d')
                 timeStamp = datetime.datetime.fromtimestamp(ts).strftime('%H:%M:%S')
                 aa=df.loc[df['Id'] == Id]['Name'].values
                 print(aa,"eeeeeeeeeeeeeeeeeee")
                 tt=str(Id)+"-"+aa
+                # cv2.putText(im,str(tt),(x,y+h), font, 1,(255,255,255),2)        
                 attendance.loc[len(attendance)] = [Id,aa,date,timeStamp]
                 
             else:
@@ -146,7 +209,8 @@ def track_image(request):
     #print(attendance)
     res=attendance
     # return res
-    message2.configure(text= res)
+    # message2.configure(text= res)
+    return HttpResponse(res)
 
 
 
@@ -198,7 +262,7 @@ def is_number(s):
 
 
 def TakeImages(request):        
-    Id='1'
+    Id='3'
     print(type(Id))
     # Id=(txt.get())
     name='bala'
@@ -232,18 +296,19 @@ def TakeImages(request):
         cv2.destroyAllWindows() 
         res = "Images Saved for ID : " + Id +" Name : "+ name
         row = [Id , name]
-        with open('/home/xarxa-15/cookiecutter/face/face2/data/StudentDetails.csv','a+') as csvFile:
+        with open('/home/xarxa-15/cookiecutter/face/face2/data/StudentDetails.csv','w', newline='') as csvFile:
             writer = csv.writer(csvFile)
             writer.writerow(row)
-        csvFile.close()
+        # csvFile.close()
+    return HttpResponse(res)
         # message.configure(text= res)
-    else:
-        if(is_number(Id)):
-            res = "Enter Alphabetical Name"
-            message.configure(text= res)
-        if(name.isalpha()):
-            res = "Enter Numeric Id"
-            message.configure(text= res)
+    # else:
+    #     if(is_number(Id)):
+    #         res = "Enter Alphabetical Name"
+    #         message.configure(text= res)
+    #     if(name.isalpha()):
+    #         res = "Enter Numeric Id"
+    #         message.configure(text= res)
  
 
 takeImg = tk.Button(window, text="Take Images", command=TakeImages  ,fg="red"  ,bg="yellow"  ,width=20  ,height=3, activebackground = "Red" ,font=('times', 15, ' bold '))
@@ -277,7 +342,8 @@ def TrainImages(request):
     recognizer.train(faces, np.array(Id))
     recognizer.save("/home/xarxa-15/cookiecutter/face/face2/data/trainningData.yml")
     res = "Image Trained"#+",".join(str(f) for f in Id)
-    message.configure(text= res)
+    # message.configure(text= res)
+    return HttpResponse(res)
 
 def getImagesAndLabels(path):
     #get the path of all the files in the folder
