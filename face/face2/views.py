@@ -29,6 +29,12 @@ def download(request):
     bala = 'bala'
     return bala
 
+
+def load_page(request, template_name="upload.html"):
+    bala = 'bala'
+
+    return HttpResponse(request, locals, template_name)
+
  
 def upload_video(request):
      
@@ -96,12 +102,12 @@ message2.place(x=650, y=650)
 
 def track_image1(request):
     recognizer = cv2.face.LBPHFaceRecognizer_create()#cv2.createLBPHFaceRecognizer()
-    recognizer.read("/home/xarxa-15/19_01_2021_projects/Face-recognition-and-attendance-system-master/trainningData.yml")
-    harcascadePath = "/home/xarxa-15/19_01_2021_projects/Face-recognition-and-attendance-system-master/haarcascade_frontalface_default.xml"
+    recognizer.read("F:\\22_02_2021\\facedetection_with_django\\face\\face2\\datatrainningData.yml")
+    harcascadePath = "F:\\22_02_2021\\facedetection_with_django\\face\\face2\\haarcascade_frontalface_default.xml"
     # harcascadePath = "haarcascade_frontalface_default.xml"
     faceCascade = cv2.CascadeClassifier(harcascadePath)  
     # df=pd.read_csv("StudentDetails\\StudentDetails.csv")
-    df=pd.read_csv("/home/xarxa-15/19_01_2021_projects/Face-recognition-and-attendance-system-master/StudentDetails/StudentDetails.csv")
+    df=pd.read_csv("F:\\22_02_2021\\facedetection_with_django\\face\\face2\\StudentDetails/StudentDetails.csv")
     cam = cv2.VideoCapture(0)
     font = cv2.FONT_HERSHEY_SIMPLEX        
     col_names =  ['Id','Name','Date','Time']
@@ -127,8 +133,8 @@ def track_image1(request):
                 Id='Unknown'                
                 tt=str(Id)  
             if(conf > 75):
-                noOfFile=len(os.listdir("/home/xarxa-15/19_01_2021_projects/Face-recognition-and-attendance-system-master/ImagesUnknown"))+1
-                cv2.imwrite("/home/xarxa-15/19_01_2021_projects/Face-recognition-and-attendance-system-master/ImagesUnknown/Image"+str(noOfFile) + ".jpg", im[y:y+h,x:x+w])            
+                noOfFile=len(os.listdir("F:\\22_02_2021\\facedetection_with_django\\face\\face2\\ImagesUnknown"))+1
+                cv2.imwrite("F:\\22_02_2021\\facedetection_with_django\\face\\face2\\ImagesUnknown/Image"+str(noOfFile) + ".jpg", im[y:y+h,x:x+w])            
             cv2.putText(im,str(tt),(x,y+h), font, 1,(255,255,255),2)        
         attendance=attendance.drop_duplicates(subset=['Id'],keep='first')    
         cv2.imshow('im',im) 
@@ -138,7 +144,7 @@ def track_image1(request):
     date = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d')
     timeStamp = datetime.datetime.fromtimestamp(ts).strftime('%H:%M:%S')
     Hour,Minute,Second=timeStamp.split(":")
-    fileName="/home/xarxa-15/19_01_2021_projects/Face-recognition-and-attendance-system-master/Attendance/Attendance_"+date+"_"+Hour+"-"+Minute+"-"+Second+".csv"
+    fileName="F:\\22_02_2021\\facedetection_with_django\\face\\face2\\Attendance/Attendance_"+date+"_"+Hour+"-"+Minute+"-"+Second+".csv"
     attendance.to_csv(fileName,index=False)
     cam.release()
     cv2.destroyAllWindows()
@@ -158,12 +164,12 @@ def track_image1(request):
 def track_image(request):
     # recognizer = cv2.face.LBPHFaceRecognizer_create()#cv2.createLBPHFaceRecognizer()
     recognizer = cv2.face_LBPHFaceRecognizer.create()
-    recognizer.read("/home/xarxa-15/cookiecutter/face/face2/data/trainningData.yml")
-    harcascadePath = "/home/xarxa-15/cookiecutter/face/face2/data/haarcascade_frontalface_default.xml"
+    recognizer.read("F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\trainningData.yml")
+    harcascadePath = "F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\haarcascade_frontalface_default.xml"
     # harcascadePath = "haarcascade_frontalface_default.xml"
     faceCascade = cv2.CascadeClassifier(harcascadePath)  
     # df=pd.read_csv("StudentDetails\\StudentDetails.csv")
-    df=pd.read_csv("/home/xarxa-15/cookiecutter/face/face2/data/StudentDetails.csv")
+    df=pd.read_csv("F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\StudentDetails.csv")
     print(df,"name of user ")
     cam = cv2.VideoCapture(0)
     font = cv2.FONT_HERSHEY_SIMPLEX        
@@ -191,8 +197,8 @@ def track_image(request):
                 Id='Unknown'                
                 tt=str(Id)  
             if(conf > 75):
-                noOfFile=len(os.listdir("/home/xarxa-15/cookiecutter/face/face2/data/ImagesUnknown"))+1
-                cv2.imwrite("/home/xarxa-15/cookiecutter/face/face2/data/ImagesUnknown/Image"+str(noOfFile) + ".jpg", im[y:y+h,x:x+w])            
+                noOfFile=len(os.listdir("F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\ImagesUnknown"))+1
+                cv2.imwrite("F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\ImagesUnknown/Image"+str(noOfFile) + ".jpg", im[y:y+h,x:x+w])            
             cv2.putText(im,str(tt),(x,y+h), font, 1,(255,255,255),2)        
         attendance=attendance.drop_duplicates(subset=['Id'],keep='first')    
         cv2.imshow('im',im) 
@@ -202,7 +208,7 @@ def track_image(request):
     date = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d')
     timeStamp = datetime.datetime.fromtimestamp(ts).strftime('%H:%M:%S')
     Hour,Minute,Second=timeStamp.split(":")
-    fileName="/home/xarxa-15/cookiecutter/face/face2/data/Attendance/Attendance_"+date+"_"+Hour+"-"+Minute+"-"+Second+".csv"
+    fileName="F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\Attendance\\Attendance_"+date+"_"+Hour+"-"+Minute+"-"+Second+".csv"
     attendance.to_csv(fileName,index=False)
     cam.release()
     cv2.destroyAllWindows()
@@ -268,7 +274,7 @@ def TakeImages(request):
     name='bala'
     if(is_number(Id) and name.isalpha()):
         cam = cv2.VideoCapture(0)
-        harcascadePath = "/home/xarxa-15/cookiecutter/face/face2/data/haarcascade_frontalface_default.xml"
+        harcascadePath = "F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\haarcascade_frontalface_default.xml"
         # harcascadePath = "haarcascade_frontalface_default.xml"
         detector=cv2.CascadeClassifier(harcascadePath)
         sampleNum=0
@@ -281,7 +287,7 @@ def TakeImages(request):
                 #incrementing sample number 
                 sampleNum=sampleNum+1
                 #saving the captured face in the dataset folder TrainingImage
-                cv2.imwrite("/home/xarxa-15/cookiecutter/face/face2/data/TrainingImage/ "+name +"."+Id +'.'+ str(sampleNum) + ".jpg", gray[y:y+h,x:x+w])
+                cv2.imwrite("F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\TrainingImage\\ "+name +"."+Id +'.'+ str(sampleNum) + ".jpg", gray[y:y+h,x:x+w])
                 # cv2.imwrite("TrainingImage\\ "+name +"."+Id +'.'+ str(sampleNum) + ".jpg", gray[y:y+h,x:x+w])
               
                 #display the frame
@@ -296,7 +302,7 @@ def TakeImages(request):
         cv2.destroyAllWindows() 
         res = "Images Saved for ID : " + Id +" Name : "+ name
         row = [Id , name]
-        with open('/home/xarxa-15/cookiecutter/face/face2/data/StudentDetails.csv','w', newline='') as csvFile:
+        with open('F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\StudentDetails.csv','w', newline='') as csvFile:
             writer = csv.writer(csvFile)
             writer.writerow(row)
         # csvFile.close()
@@ -333,14 +339,14 @@ def TrainImages(request):
     recognizer = cv2.face_LBPHFaceRecognizer.create()
     #recognizer = cv2.face.LBPHFaceRecognizer_create()
     # $cv2.createLBPHFaceRecognizer()
-    harcascadePath = "/home/xarxa-15/cookiecutter/face/face2/data/haarcascade_frontalface_default.xml"
+    harcascadePath = "F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\haarcascade_frontalface_default.xml"
     print(harcascadePath,"harcascadePath")
     # harcascadePath = "haarcascade_frontalface_default.xml"
     _detector =cv2.CascadeClassifier(harcascadePath)
-    faces,Id = getImagesAndLabels("/home/xarxa-15/cookiecutter/face/face2/data/TrainingImage")
+    faces,Id = getImagesAndLabels("F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\TrainingImage")
     # faces,Id = getImagesAndLabels("TrainingImage")
     recognizer.train(faces, np.array(Id))
-    recognizer.save("/home/xarxa-15/cookiecutter/face/face2/data/trainningData.yml")
+    recognizer.save("F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\trainningData.yml")
     res = "Image Trained"#+",".join(str(f) for f in Id)
     # message.configure(text= res)
     return HttpResponse(res)

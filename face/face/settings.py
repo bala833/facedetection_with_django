@@ -10,7 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
-from pathlib import Path
+from decouple import config
+from unipath import Path
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,9 +25,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '-_^)1yol9s4a+_!+5hs80l9)f9#xxs)o5o610!cc=(4@w_m+0y'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', config('SERVER', default='127.0.0.1')]
 
 
 # Application definition
@@ -76,9 +80,9 @@ TEMPLATES = [
 ]
 
 
-# TEMPLATE_DIRS = (
-#     os.path.join(SETTINGS_PATH, 'templates'),
-# )
+TEMPLATE_DIRS = (
+    os.path.join(SETTINGS_PATH, 'templates'),
+)
 
 WSGI_APPLICATION = 'face.wsgi.application'
 
@@ -89,7 +93,7 @@ WSGI_APPLICATION = 'face.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': str(BASE_DIR / 'db.sqlite3'),
+        'NAME': 'db.sqlite3',
     }
 }
 
@@ -136,11 +140,18 @@ USE_TZ = True
  
 STATIC_URL = '/static/'
  
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static") 
-]
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, "static") 
+# ]
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'core/static'),
+)
+
  
 STATIC_ROOT = os.path.join(BASE_DIR,'assets')
+
+
 # MEDIA FILES
  
 # CRISPY_TEMPLATE_PACK = 'uni_form'

@@ -1,51 +1,110 @@
+{% extends "base.html" %}
 {% load crispy_forms_tags %}
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Upload Videos</title>
-</head>
-<body>
+{% load static %}
+{% block content %}
+
 
 <h1>Video Uploader</h1>
+<form method="post" action="" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="container mb-5">
+        {% crispy form %}
+        <br>
+        <input type="submit" value="Save">
+    </div>
+</form>
+<div class="container">
+    <div class="wrapper">
+        <div>
+            <a href="{% url 'TakeImages' %}">
+                <button style="background-color: gray; border: 1px solid gray;" name="Take you image " value="Take you image "></button>
+            </a>
+        </div>
+        <div>
+            <a href="{% url 'TrainImages' %}">
+                <button style="background-color: gray; border: 1px solid gray;" name="Train your face" value="Train your face"></button>
+            </a>
+        </div>
+        <div>
+            <a href="{% url 'track_image' %}">
+            	{% comment %}
+                <button style="background-color: gray;" value="Track you Image"></button>
+            	{% endcomment %}
+	        	<img src="{% static '/images/Face_recog.gif' %}" border=0 style="box-shadow: 6px 16px 44px 31px black;">
+            </a>
+        </div>
+        <div>
+            <a href="{% url 'download' %}">
+                <button style="background-color: gray;" value="Track you Image"></button>
+            </a>
+        </div>
+        <div>
+        	<!-- <IMG SRC="animation1. gif"> -->
+        </div>
+        <div class="">
 
-				<form method="post" action="" enctype="multipart/form-data" >
-				           {% csrf_token %}
-				          <div class="container mb-5">
-				            {% crispy form %}
-				      <br>
-				<input type="submit" value="Save">
-				</div>
-				</form>
+        	<a class="btn-primary">Save</a>
+        	<a class="btn-secondary">Save</a>
+        	<a class="btn-light">Save</a>
+        	<a class="btn-dark">Save</a>
+        	<a class="btn-danger">Save</a>
+        	<a class="btn-warning">Save</a>
+        	<a class="btn-success">Save</a>
+        	<a class="btn-default">Save</a>
+        	<a class="btn-neutral">Save</a>
+        	<a class="btn-darker">Save</a>
+        	<b>
+        	<a class="btn-outline-primary">Save</a>
+        	<a class="btn-outline-secondary">Save</a>
+        	<a class="btn-outline-light">Save</a>
+        	<a class="btn-outline-dark">Save</a>
+        	<a class="btn-outline-danger">Save</a>
+        	<a class="btn-outline-warning">Save</a>
+        	<a class="btn-outline-success">Save</a>
+        	<a class="btn-outline-default">Save</a>
+        	<a class="btn-outline-neutral">Save</a>
+        	<a class="btn-outline-darker">Save</a>
 
-<div>
-	<a href="{% url 'TakeImages' %}">
-	<button style="background-color: gray; border: 1px solid gray;" name="Take you image " value="Take you image "></button>
-</a>
+        	<a class="btn-group-vertical">Save</a>
+        </div>
+    </div>
 </div>
-
-<div>
-	<a href="{% url 'TrainImages' %}">
-	<button style="background-color: gray; border: 1px solid gray;" name="Train your face" value="Train your face"></button>
-</a>
-</div>
-
-<div>
-	<a href="{% url 'track_image' %}">
-	<button style="background-color: gray;" value="Track you Image"></button>
-</a>
-</div>
+{% endblock content %}
 
 
 
-<div>
-	<a href="{% url 'download' %}">
-	<button style="background-color: gray;" value="Track you Image"></button>
-</a>
-</div>
 
 
-</body>
-</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 {% comment %}
 
