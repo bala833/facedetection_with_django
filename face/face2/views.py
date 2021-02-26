@@ -1,8 +1,8 @@
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from .models import Videos
-from face2.forms import VideoForm
-
+from .models import Videos,Face
+from face2.forms import VideoForm,FaceForm
+from rest_framework.response import Response
 
 import tkinter as tk
 from tkinter import Message ,Text
@@ -20,6 +20,35 @@ import tkinter.font as font
 # Create your views here.
 import pytube
 
+def face(request,template_name="new_face.html"):
+    if request.method=='GET':
+        try:
+            face = Face.objects.all()
+            print(face,'face')
+            page = 'list'
+        except Face.DoesNotExist:
+            raise Http404("page is not exit")
+    if request.method == 'POST':
+        form= FaceForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    return render(request,template_name,locals())
+         
+def add_face(request,template_name='add_face.html'):
+    if request.method == 'POST':
+        form= FaceForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form =FaceForm()
+    return render(request,template_name,locals())
+
+
+
+
+
 def download(request):
     link = "https://www.youtube.com/watch?v=n06H7OcPd-g"
     yt = pytube.YouTube(link)
@@ -30,10 +59,9 @@ def download(request):
     return bala
 
 
-def load_page(request, template_name="upload.html"):
-    bala = 'bala'
+def load_page(request, template_name="landing_page.html"):
 
-    return HttpResponse(request, locals, template_name)
+    return render(request,template_name,locals())
 
  
 def upload_video(request):
@@ -267,7 +295,10 @@ def is_number(s):
     return False
 
 
-def TakeImages(request):        
+def TakeImages(request):  
+    name = request.GET.get('name', None)      
+    user_id = request.GET.get('user_id', None)    
+    print(name, user_id, "pppppppppppppppppppppppppppppppppp")  
     Id='3'
     print(type(Id))
     # Id=(txt.get())

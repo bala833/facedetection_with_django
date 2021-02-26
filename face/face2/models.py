@@ -15,3 +15,14 @@ class Videos(models.Model):
         return self.title
 
 # Create your models here.
+
+class Face(models.Model):
+	user_id = models.PositiveSmallIntegerField()
+	name = models.CharField(max_length=225)
+
+	class Meta:
+		verbose_name = 'face'
+		verbose_name_plural = 'faces'
+
+	def __str__(self):
+		return self.name

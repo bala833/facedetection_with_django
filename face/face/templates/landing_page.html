@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="mb-5">
+    <div class="text-center">
+    	<a href="{% url 'face' %}">
+	        <div class="mb-5">
+	            <img src="{% static '/images/add_new_face.gif' %}" border=0 style="box-shadow: 16px 17px 45px 58px azure;margin-top: 91px;">
+	        </div>
+	    </a>
+        <div class="mt-5 mb-5">
+            <span class="" style="">
+                <h3 style="color: black;margin-top: 70px;">Add New Face</h3>
+            </span>
+        </div>
+    </div>
+    <div class="text-center">
+        <div class="m-5">
+            {% comment %}
+            <img src="{% static '/images/face_train_gif.gif' %}" border=0 style="box-shadow: -2px -9px 49px 41px black;">
+            {% endcomment %}
+            <video class="" preload="auto" muted="" border=0 style="box-shadow: 1px -13px 51px 20px #232324;border-radius: 11px;" loop="" playsinline="" autoplay="" src="https://cdn.dribbble.com/users/707385/videos/20060/25_5_1.mp4">
+            </video>
+        </div>
+        <div class="mt-5 mb-0">
+            <span class="" style="color: white;">
+                <h3>Train Your Image To Machine</h3>
+            </span>
+        </div>
+    </div>
+    <div class="text-center">
+        <div class="mb-3 mt-5">
+            <img src="{% static '/images/Face_recog.gif' %}" border=0 style="box-shadow: -2px -9px 49px 41px black;">
+        </div>
+        <div class="mt-2 mb-0">
+            <span class="" style="color: white;">
+                <h3>Track Your Face</h3>
+            </span>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+        

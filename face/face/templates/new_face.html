@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+<div></div>
+<div class="text-center">
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Id</th>
+    </tr>
+	{% for faces in face %}
+    <tr> 
+        <td>{{ faces.name }}</td>
+        <td>{{ faces.user_id }}</td>
+        <td><a href="{% url 'add_face' %}" style="white-space: nowrap;">Add face</a></td>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+
+
+{% comment %}
+<form method="post" action="" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="container mb-5">
+        {% crispy form %}
+        <br>
+        <input type="submit" value="Save">
+    </div>
+</form>
+{% endcomment %}
+
+{% endblock content %}

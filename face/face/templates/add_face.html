@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content%}
+<form method="post" action="" id="add_new_face" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="container m-5">
+        {% crispy form %}
+        <br>
+        <input type="submit" id="save" class="btn-success" value="Save">
+        <a id="cancel" class="btn-secondary" href="#">Cancel</a>
+        {% comment %}
+        <a id="cancel" class="btn-secondary" href="{% url 'face' %}">Cancel</a>
+        {% endcomment %}
+    </div>
+</form>
+{% endblock content%}
+
+
+{% block javascripts%}
+
+<script type="text/javascript">
+  $(document).ready(function() {
+
+  $('#add_new_face').hide();
+  $('#add_new_face').show();
+});
+
+
+$( "#save" ).click(function() {
+    var name = ($('#id_name').val())
+    var user_id = ($('#id_user_id').val())
+
+    $.ajax({
+        url: '{% url "TakeImages" %}',
+        data: {
+            'name': name,
+            'name': user_id,
+
+        },
+        dataType: 'json',
+        success: function(data) {
+            alert(data)
+
+        }
+    });
+  });  
+</script>
+{% endblock javascripts%}

@@ -1,11 +1,13 @@
 {% load static %}
 <div class="row m-2 ">
-	<div class="col-md-3">
-    <img src="{% static '/images/face_image_gif.gif' %}" style="border-radius: 318px 238px;width: 70px;height: 64px; 
+    <div class="col-md-3">
+        <a href="{% url 'home' %}">
+            <img src="{% static '/images/face_image_gif.gif' %}" style="border-radius: 318px 238px;width: 70px;height: 64px; 
     box-shadow: 0px 0px 11px 2px black;">
+        </a>
     </div>
-	<div class="col-md-9 text-center">
-   	<h4>Face Recognization Using Django.</h4>
+    <div class="col-md-9 text-center">
+        <h4>Face Recognization Using Django.</h4>
     </div>
     <marquee>
         <h2 style="margin-bottom: 0px !important">

@@ -20443,3 +20443,19 @@ Copyright (c) 2015 Daniel Eden
 }
 
 /*# sourceMappingURL=dashboard-free.css.map */
+
+.footer_hover:hover{
+
+  height: 50px;
+  width: 50px;
+
+}
+
+.zoom:hover {
+  transform: scale(1.5); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}
+
+
+.disable_{
+  display: none; 
+}
