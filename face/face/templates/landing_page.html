@@ -16,6 +16,7 @@
         </div>
     </div>
     <div class="text-center">
+        <a href="{% url 'TrainImages' %}">
         <div class="m-5">
             {% comment %}
             <img src="{% static '/images/face_train_gif.gif' %}" border=0 style="box-shadow: -2px -9px 49px 41px black;">
@@ -23,6 +24,7 @@
             <video class="" preload="auto" muted="" border=0 style="box-shadow: 1px -13px 51px 20px #232324;border-radius: 11px;" loop="" playsinline="" autoplay="" src="https://cdn.dribbble.com/users/707385/videos/20060/25_5_1.mp4">
             </video>
         </div>
+        </a>
         <div class="mt-5 mb-0">
             <span class="" style="color: white;">
                 <h3>Train Your Image To Machine</h3>
@@ -30,9 +32,11 @@
         </div>
     </div>
     <div class="text-center">
+        <a href="{% url 'track_image' %}">
         <div class="mb-3 mt-5">
             <img src="{% static '/images/Face_recog.gif' %}" border=0 style="box-shadow: -2px -9px 49px 41px black;">
         </div>
+        </a>
         <div class="mt-2 mb-0">
             <span class="" style="color: white;">
                 <h3>Track Your Face</h3>

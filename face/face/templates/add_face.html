@@ -7,10 +7,10 @@
         {% crispy form %}
         <br>
         <input type="submit" id="save" class="btn-success" value="Save">
-        <a id="cancel" class="btn-secondary" href="#">Cancel</a>
         {% comment %}
-        <a id="cancel" class="btn-secondary" href="{% url 'face' %}">Cancel</a>
+        <a id="cancel" class="btn-secondary" href="#">Cancel</a>
         {% endcomment %}
+        <a id="cancel" class="btn-secondary" href="{% url 'face' %}">Cancel</a>
     </div>
 </form>
 {% endblock content%}
@@ -26,15 +26,16 @@
 });
 
 
-$( "#save" ).click(function() {
+$( "#save6666" ).click(function() {
     var name = ($('#id_name').val())
     var user_id = ($('#id_user_id').val())
+    alert($('#id_name').val())
 
     $.ajax({
         url: '{% url "TakeImages" %}',
         data: {
             'name': name,
-            'name': user_id,
+            'user_id': user_id,
 
         },
         dataType: 'json',

@@ -22,6 +22,8 @@ import pytube
 
 def face(request,template_name="new_face.html"):
     if request.method=='GET':
+        count_all_face = Face.objects.all().count()
+        print(count_all_face,"count_all_facecccccccccccccccccccc")
         try:
             face = Face.objects.all()
             print(face,'face')
@@ -37,8 +39,59 @@ def face(request,template_name="new_face.html"):
          
 def add_face(request,template_name='add_face.html'):
     if request.method == 'POST':
+        # request.POST.get('name')
+        # print(request.user_id)
         form= FaceForm(request.POST)
         if form.is_valid():
+
+            name =  request.POST.get('name')     
+            Id = request.POST.get('user_id')  
+            # Id='3'
+            print(type(Id))
+            # Id=(txt.get())
+            # name='bala'
+            if(is_number(Id) and name.isalpha()):
+                cam = cv2.VideoCapture(0)
+                harcascadePath = 'F:\\MY WORK\\facedetection_with_django\\face\\face2\\data\\haarcascade_frontalface_default.xml'
+                #company
+                # harcascadePath = "F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\haarcascade_frontalface_default.xml"
+                # harcascadePath = "haarcascade_frontalface_default.xml"
+                detector=cv2.CascadeClassifier(harcascadePath)
+                sampleNum=0
+                while(True):
+                    _ret, img = cam.read()
+                    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+                    faces = detector.detectMultiScale(gray, 1.3, 5)
+                    for (x,y,w,h) in faces:
+                        cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)        
+                        #incrementing sample number 
+                        sampleNum=sampleNum+1
+                        #saving the captured face in the dataset folder TrainingImage
+                        cv2.imwrite("F:\\MY WORK\\facedetection_with_django\\face\\face2\\data\\TrainingImage\\ "+name +"."+Id +'.'+ str(sampleNum) + ".jpg", gray[y:y+h,x:x+w])
+                        # company 
+                        # cv2.imwrite("F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\TrainingImage\\ "+name +"."+Id +'.'+ str(sampleNum) + ".jpg", gray[y:y+h,x:x+w])
+                        # cv2.imwrite("TrainingImage\\ "+name +"."+Id +'.'+ str(sampleNum) + ".jpg", gray[y:y+h,x:x+w])
+                      
+                        #display the frame
+                        cv2.imshow('frame',img) 
+                    #wait for 100 miliseconds 
+                    if cv2.waitKey(100) & 0xFF == ord('q'):
+                        break
+                    # break if the sample number is morethan 60
+                    elif sampleNum>60:
+                        break
+                cam.release()
+                cv2.destroyAllWindows() 
+                res = "Images Saved for ID : " + Id +" Name : "+ name
+                row = [Id , name]
+                with open('F:\\MY WORK\\facedetection_with_django\\face\\face2\\data\\StudentDetails.csv','w', newline='') as csvFile:
+                # company
+                # with open('F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\StudentDetails.csv','w', newline='') as csvFile:
+                    writer = csv.writer(csvFile)
+                    writer.writerow(row)
+                    print(writer)
+                # csvFile.close()
+            # return HttpResponse(res)
             form.save()
             return redirect('home')
     else:
@@ -61,6 +114,12 @@ def download(request):
 
 def load_page(request, template_name="landing_page.html"):
 
+    try:
+        name = Face.objects.all()
+        count_all_face = Face.objects.all().count()
+    except Face.DoesNotExist:
+        raise Http404("page is not exit")
+
     return render(request,template_name,locals())
 
  
@@ -80,7 +139,6 @@ def upload_video(request):
             form.save()
         # content = Videos(title=title,video=video)
         # content.save()
-            print(form, "result")
             return redirect('videos')
     else:
         form = VideoForm()
@@ -192,12 +250,19 @@ def track_image1(request):
 def track_image(request):
     # recognizer = cv2.face.LBPHFaceRecognizer_create()#cv2.createLBPHFaceRecognizer()
     recognizer = cv2.face_LBPHFaceRecognizer.create()
-    recognizer.read("F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\trainningData.yml")
-    harcascadePath = "F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\haarcascade_frontalface_default.xml"
+    recognizer.read("F:\\MY WORK\\facedetection_with_django\\face\\face2\\data\\trainningData.yml")
+    # company
+    # recognizer.read("F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\trainningData.yml")
+
+    harcascadePath = "F:\\MY WORK\\facedetection_with_django\\face\\face2\\data\\haarcascade_frontalface_default.xml"
+    # company
+    # harcascadePath = "F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\haarcascade_frontalface_default.xml"
     # harcascadePath = "haarcascade_frontalface_default.xml"
     faceCascade = cv2.CascadeClassifier(harcascadePath)  
     # df=pd.read_csv("StudentDetails\\StudentDetails.csv")
-    df=pd.read_csv("F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\StudentDetails.csv")
+    df=pd.read_csv("F:\\MY WORK\\facedetection_with_django\\face\\face2\\data\\StudentDetails.csv")
+    # company
+    # df=pd.read_csv("F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\StudentDetails.csv")
     print(df,"name of user ")
     cam = cv2.VideoCapture(0)
     font = cv2.FONT_HERSHEY_SIMPLEX        
@@ -225,8 +290,13 @@ def track_image(request):
                 Id='Unknown'                
                 tt=str(Id)  
             if(conf > 75):
-                noOfFile=len(os.listdir("F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\ImagesUnknown"))+1
-                cv2.imwrite("F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\ImagesUnknown/Image"+str(noOfFile) + ".jpg", im[y:y+h,x:x+w])            
+                noOfFile=len(os.listdir("F:\\MY WORK\\facedetection_with_django\\face\\face2\\data\\ImagesUnknown"))+1
+                # company
+                # noOfFile=len(os.listdir("F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\ImagesUnknown"))+1
+                
+                cv2.imwrite("F:\\MY WORK\\facedetection_with_django\\face\\face2\\data\\ImagesUnknown/Image"+str(noOfFile) + ".jpg", im[y:y+h,x:x+w])            
+                # company
+                # cv2.imwrite("F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\ImagesUnknown/Image"+str(noOfFile) + ".jpg", im[y:y+h,x:x+w])            
             cv2.putText(im,str(tt),(x,y+h), font, 1,(255,255,255),2)        
         attendance=attendance.drop_duplicates(subset=['Id'],keep='first')    
         cv2.imshow('im',im) 
@@ -236,7 +306,10 @@ def track_image(request):
     date = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d')
     timeStamp = datetime.datetime.fromtimestamp(ts).strftime('%H:%M:%S')
     Hour,Minute,Second=timeStamp.split(":")
-    fileName="F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\Attendance\\Attendance_"+date+"_"+Hour+"-"+Minute+"-"+Second+".csv"
+    fileName="F:\\MY WORK\\facedetection_with_django\\face\\face2\\data\\Attendance\\Attendance_"+date+"_"+Hour+"-"+Minute+"-"+Second+".csv"
+    
+    # company
+    # fileName="F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\Attendance\\Attendance_"+date+"_"+Hour+"-"+Minute+"-"+Second+".csv"
     attendance.to_csv(fileName,index=False)
     cam.release()
     cv2.destroyAllWindows()
@@ -297,15 +370,17 @@ def is_number(s):
 
 def TakeImages(request):  
     name = request.GET.get('name', None)      
-    user_id = request.GET.get('user_id', None)    
-    print(name, user_id, "pppppppppppppppppppppppppppppppppp")  
-    Id='3'
+    Id = request.GET.get('user_id', None)    
+    print(name, Id, "pppppppppppppppppppppppppppppppppp")  
+    # Id='3'
     print(type(Id))
     # Id=(txt.get())
-    name='bala'
+    # name='bala'
     if(is_number(Id) and name.isalpha()):
         cam = cv2.VideoCapture(0)
-        harcascadePath = "F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\haarcascade_frontalface_default.xml"
+        harcascadePath = 'F:\\MY WORK\\facedetection_with_django\\face\\face2\\data\\haarcascade_frontalface_default.xml'
+        #company
+        # harcascadePath = "F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\haarcascade_frontalface_default.xml"
         # harcascadePath = "haarcascade_frontalface_default.xml"
         detector=cv2.CascadeClassifier(harcascadePath)
         sampleNum=0
@@ -318,7 +393,9 @@ def TakeImages(request):
                 #incrementing sample number 
                 sampleNum=sampleNum+1
                 #saving the captured face in the dataset folder TrainingImage
-                cv2.imwrite("F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\TrainingImage\\ "+name +"."+Id +'.'+ str(sampleNum) + ".jpg", gray[y:y+h,x:x+w])
+                cv2.imwrite("F:\\MY WORK\\facedetection_with_django\\face\\face2\\data\\TrainingImage\\ "+name +"."+Id +'.'+ str(sampleNum) + ".jpg", gray[y:y+h,x:x+w])
+                # company 
+                # cv2.imwrite("F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\TrainingImage\\ "+name +"."+Id +'.'+ str(sampleNum) + ".jpg", gray[y:y+h,x:x+w])
                 # cv2.imwrite("TrainingImage\\ "+name +"."+Id +'.'+ str(sampleNum) + ".jpg", gray[y:y+h,x:x+w])
               
                 #display the frame
@@ -333,9 +410,12 @@ def TakeImages(request):
         cv2.destroyAllWindows() 
         res = "Images Saved for ID : " + Id +" Name : "+ name
         row = [Id , name]
-        with open('F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\StudentDetails.csv','w', newline='') as csvFile:
+        with open('F:\\MY WORK\\facedetection_with_django\\face\\face2\\data\\StudentDetails.csv','w', newline='') as csvFile:
+        # company
+        # with open('F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\StudentDetails.csv','w', newline='') as csvFile:
             writer = csv.writer(csvFile)
             writer.writerow(row)
+            print(writer)
         # csvFile.close()
     return HttpResponse(res)
         # message.configure(text= res)
@@ -370,14 +450,20 @@ def TrainImages(request):
     recognizer = cv2.face_LBPHFaceRecognizer.create()
     #recognizer = cv2.face.LBPHFaceRecognizer_create()
     # $cv2.createLBPHFaceRecognizer()
-    harcascadePath = "F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\haarcascade_frontalface_default.xml"
+    harcascadePath = "F:\\MY WORK\\facedetection_with_django\\face\\face2\\data\\haarcascade_frontalface_default.xml"
+    # company
+    # harcascadePath = "F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\haarcascade_frontalface_default.xml"
     print(harcascadePath,"harcascadePath")
     # harcascadePath = "haarcascade_frontalface_default.xml"
     _detector =cv2.CascadeClassifier(harcascadePath)
-    faces,Id = getImagesAndLabels("F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\TrainingImage")
+    faces,Id = getImagesAndLabels("F:\\MY WORK\\facedetection_with_django\\face\\face2\\data\\TrainingImage")
+    # company
+    # faces,Id = getImagesAndLabels("F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\TrainingImage")
     # faces,Id = getImagesAndLabels("TrainingImage")
     recognizer.train(faces, np.array(Id))
-    recognizer.save("F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\trainningData.yml")
+    recognizer.save("F:\\MY WORK\\facedetection_with_django\\face\\face2\\data\\trainningData.yml")
+    # company    
+    # recognizer.save("F:\\22_02_2021\\facedetection_with_django\\face\\face2\\data\\trainningData.yml")
     res = "Image Trained"#+",".join(str(f) for f in Id)
     # message.configure(text= res)
     return HttpResponse(res)
