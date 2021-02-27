@@ -3,33 +3,39 @@
 
 
 {% block content %}
-<div></div>
-<div class="text-center">
-<table>
-    <tr>
-        <th>Name</th>
-        <th>Id</th>
-    </tr>
-	{% for faces in face %}
-    <tr> 
-        <td>{{ faces.name }}</td>
-        <td>{{ faces.user_id }}</td>
-        <td><a href="{% url 'add_face' %}" style="white-space: nowrap;">Add face</a></td>
-    </tr>
-    {% endfor %}
-</table>
-</div>
-
-
-{% comment %}
-<form method="post" action="" enctype="multipart/form-data">
-    {% csrf_token %}
-    <div class="container mb-5">
-        {% crispy form %}
-        <br>
-        <input type="submit" value="Save">
+<div class="col-md-12 my-3">
+    <div class="row" style="align-content: center;">
+        <div class="col-md-12">
+            <a class="btn btn-primary float-left mb-3" href="{% url 'add_face' %}" style="white-space: nowrap;">Add face</a>
+        </div>
     </div>
-</form>
-{% endcomment %}
-
+    <div class="row">
+        <div class="col-md-12">
+            <table id="data_table_" class="table table-hover text-center" style="">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Id</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for faces in face %}
+                    <tr>
+                        <td>{{ faces.name }}</td>
+                        <td>{{ faces.user_id }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock content %}
+
+{% block javascripts%}
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#data_table_').DataTable();
+} );
+</script>
+{% endblock javascripts%}

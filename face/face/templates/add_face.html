@@ -5,12 +5,13 @@
     {% csrf_token %}
     <div class="container m-5">
         {% crispy form %}
+        <span id="name_valid" style="color: red;">*Do not use Space </span>
         <br>
-        <input type="submit" id="save" class="btn-success" value="Save">
+        <input type="submit" id="save" class="btn btn-success" value="Save">
         {% comment %}
         <a id="cancel" class="btn-secondary" href="#">Cancel</a>
         {% endcomment %}
-        <a id="cancel" class="btn-secondary" href="{% url 'face' %}">Cancel</a>
+        <a id="cancel" class="btn btn-secondary" href="{% url 'face' %}">Cancel</a>
     </div>
 </form>
 {% endblock content%}
@@ -44,6 +45,24 @@ $( "#save6666" ).click(function() {
 
         }
     });
-  });  
+  });
+
+$('#name_valid').hide()
+
+$('#id_name').keyup(function() {
+    var name = $('#id_name').val()
+    if ((/\s+/).test(name)){
+        $('#name_valid').show()
+        return false;
+    }
+    else{
+        $('#name_valid').hide()
+    }  
+});
+
+
+
+
+// var name = $("#id_name").val()
 </script>
 {% endblock javascripts%}
