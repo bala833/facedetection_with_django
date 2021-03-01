@@ -43,6 +43,24 @@ def face(request,template_name="new_face.html"):
             form.save()
             return redirect('home')
     return render(request,template_name,locals())
+
+
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        pass
+ 
+    try:
+        import unicodedata
+        unicodedata.numeric(s)
+        return True
+    except (TypeError, ValueError):
+        pass
+ 
+    return False
+
          
 def add_face(request,template_name='add_face.html'):
     count_all_face = all_face
@@ -103,8 +121,8 @@ def add_face(request,template_name='add_face.html'):
                     csvFile.close()
                 # csvFile.close()
             # return HttpResponse(res)
-            form.save()
-            return redirect('home')
+                form.save()
+                return redirect('home')
     else:
         form =FaceForm()
     return render(request,template_name,locals())
@@ -365,21 +383,6 @@ txt2 = tk.Entry(window,width=20  ,bg="yellow"  ,fg="red",font=('times', 15, ' bo
 txt2.place(x=600, y=315)
 
 
-def is_number(s):
-    try:
-        float(s)
-        return True
-    except ValueError:
-        pass
- 
-    try:
-        import unicodedata
-        unicodedata.numeric(s)
-        return True
-    except (TypeError, ValueError):
-        pass
- 
-    return False
 
 
 def TakeImages(request):  
